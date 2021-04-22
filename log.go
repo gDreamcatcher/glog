@@ -37,11 +37,24 @@ var (
 )
 
 func L() *zap.Logger{
-	return _globalL.Load().(*zap.Logger)
+	v := _globalL.Load()
+	if v == nil {
+		defaultLogger := zap.NewExample()
+		_globalL.Store(defaultLogger)
+		_globalS.Store(defaultLogger.Sugar())
+		return defaultLogger
+	}
+	return v.(*zap.Logger)
 }
 
 func S() *zap.SugaredLogger{
-	return _globalS.Load().(*zap.SugaredLogger)
+	v := _globalS.Load()
+	if v == nil {
+		defaultLogger := L()
+		_globalS.Store(defaultLogger.Sugar())
+		return defaultLogger.Sugar()
+	}
+	return v.(*zap.SugaredLogger)
 }
 
 // InitLogger initializes a zap logger.

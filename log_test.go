@@ -148,3 +148,7 @@ func BenchmarkDebug(b *testing.B) {
 	//	}
 	//})
 }
+
+func TestDefaultLogger(t *testing.T){
+	L().Info("default logger")
+}
